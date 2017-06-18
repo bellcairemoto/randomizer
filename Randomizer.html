@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Randomizer</title>
+		<meta charset="utf-8"/>
+		<script type="text/javascript" src="jquery.js"></script>
+		<style>
+			body {
+				background-color: #eeeeee;
+				font-family: Calibri, sans-serif;
+			}
+			
+			textarea, #result {
+				position: fixed;
+				top: 5%;
+				width: 30%;
+				height: 90%;
+				border: none;
+				-ms-overflow-style: none;
+				border-radius: 1%;
+				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+				box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+				padding: 10px;
+				background-color: white;
+				font-size: 18px;
+				overflow-y: scroll;
+				font-family: consolas;
+			}
+			
+			textarea {
+				left: 5%;
+			}
+			
+			#result {
+				right: 5%;
+			}
+			
+			button {
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				transform: translate( -50%, -50%);
+				background-color: #009688;
+				color: white;
+				border: none;
+				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+				box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+				border-radius: 2%;
+				cursor: pointer;
+			}
+			
+			#settings {
+				width: 12.5%;
+				position: fixed;
+				top: 60%;
+				left: 50%;
+				transform: translate( -50%, -50%);
+			}
+			
+			abbr {
+				cursor: help;
+			}
+			
+			#arrows {
+				position: fixed;
+				width: 5%;
+				right: 0px;
+				bottom: 2.5%;
+				height: 10%;
+				opacity : 0;
+			}
+			
+			.arrow {
+				position: absolute;
+				left: 50%;
+				transform: translate( -50%, 0%);
+				border-radius: 100%;
+				background-color: white;
+				height: 40px;
+				width: 40px;
+				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+				box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+				cursor: pointer;
+			}
+			
+			#arrows:hover {
+				opacity: 1;
+			}
+			
+			.arrow:nth-child(1) {
+				top: 0%;
+			}
+			
+			.arrow:nth-child(2) {
+				bottom: 0%;
+			}
+			
+			td {
+				border: 5px solid black;
+			}
+		</style>
+		<script>
+			$(document).ready(function(){
+				var lines;
+				$('button').click(function(){
+					$('#result').html('');
+					lines = $('textarea').val().split('\n');
+					var i = lines.length;
+					if ($('#attribute').is(':checked')) {
+						for (i = 0; i < lines.length; i++) {
+							split = lines[i].split('.');
+							lines[i] = '<abbr title="' + split[0] + '">' + split[1] + '</abbr></br>   ';
+						}
+					} else if ($('#table').is(':checked')) {
+						$('#result').append('<table style="table-collapse: collapse" border="1">');
+						for (i = 0; i < lines.length; i++) {
+							split = lines[i].split('.');
+							lines[i] = '<tr><td>' + split[1] + '</td><td>' + split[0] + '</td></tr>';
+						}
+					}
+					while (i > 0){
+						num = Math.floor(Math.random()*lines.length);
+						$('#result').append(lines[num]);
+						lines.splice(num, 1);
+						i--;
+					}
+					
+					if ($('#table').is(':checked')) {
+						$('#result').append('</table>');
+					}
+					
+					if ($('#scroll').is(':checked')) {
+						for (x = 0; x <= 40; x++){
+							$('#result').append('</br>');
+						}
+					}
+				});
+				
+				$('textarea').mouseleave(function(){
+					if ($('#fade').is(':checked')){
+						$('textarea').css('color', 'white');
+					}
+				});
+				
+				$('textarea').mouseenter(function(){
+					if ($('#fade').is(':checked')){
+						$('textarea').css('color', 'black');
+					}
+				});
+				
+				$('*').click(function(){
+					$('.results').each(function(){
+						if ($(this).children().eq(0).is(':checked')) {
+							$(this).css('color', 'red');
+						} else {
+							$(this).css('color', 'black');
+						}
+					});
+				});
+				
+				$('*').keyup(function(){
+					if (event.which == '120') {
+						alert($('.results').eq(0).outerHeight());
+					}
+				});
+			});
+		</script>
+	</head>
+	
+	<body>
+		<textarea></textarea>
+		<button><strong>Randomize</strong></button>
+		<div id="settings">
+			<input type="checkbox" id="scroll"/><label for="scroll">Add page to scroll</label>
+			</br>
+			<input type="checkbox" id="attribute"/><label for="attribute">Activate attributes</label>
+			</br>
+			<input type="checkbox" id="fade"/><label for="fade">Fade initial text</label>
+			</br>
+			<input type="checkbox" id="table"/><label for="table">Activate table mode</label>
+		</div>
+		<div id="result"></div>
+		<div id="arrows">
+			<img class="arrow"/>
+			<img class="arrow"/>
+		</div>
+	<body>
+</html>
